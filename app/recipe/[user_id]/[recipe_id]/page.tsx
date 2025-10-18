@@ -1,14 +1,11 @@
 
 import { Recipe } from '@/lib/schema';
 import RecipeContainer from './components/RecipeContainer';
-import Section from '@/components/Section';
+import type { Metadata } from "next";
 
-export default async function Page({ params }: { params: Promise<{ user_id: string; recipe_id: string }> }) {
-  const { user_id, recipe_id } = await params;
-
-  const exampleRecipe: Recipe = {
+const exampleRecipe: Recipe = {
     id: '1',
-    user_id: user_id,
+    user_id: '1',
     public: true,
     title: 'Chocolate Chip Cookies',
     ingredients: [
@@ -26,14 +23,18 @@ export default async function Page({ params }: { params: Promise<{ user_id: stri
     ],
   };
 
+export async function generateMetadata({ params }: { params: Promise<{ user_id: string; recipe_id: string }> }): Promise<Metadata> {
+    const { user_id, recipe_id } = await params;
+    const user_name = "Elvenide";
+    return {
+        title: `${exampleRecipe.title} by ${user_name} | Tang`,
+        description: `${exampleRecipe.title} recipe added by ${user_name} to the Tang recipe collection.`,
+    };
+}
+
+export default async function Page({ params }: { params: Promise<{ user_id: string; recipe_id: string }> }) {
+  const { user_id, recipe_id } = await params;
   return (
-    <>
-      <Section>Placeholder 1</Section>
-      <Section>Placeholder 2</Section>
-      <Section>Placeholder 3</Section>
-      <Section>Placeholder 4</Section>
-      <Section>Placeholder 5</Section>
-      <RecipeContainer recipe={exampleRecipe} />
-    </>
+    <RecipeContainer recipe={exampleRecipe} />
   );
 }
