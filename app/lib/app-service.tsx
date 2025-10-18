@@ -1,5 +1,6 @@
 "use client";
 
+import { MotionConfig } from "motion/react";
 import { createContext, useContext } from "react";
 
 interface IAppServiceContext {
@@ -12,7 +13,9 @@ const defaultValue = {
 const AppServiceContext = createContext<IAppServiceContext>(defaultValue);
 
 export const AppServiceProvider = ({ children }: { children: React.ReactNode }) => {
-    return <AppServiceContext.Provider value={defaultValue}>{children}</AppServiceContext.Provider>;
+    return <MotionConfig reducedMotion="user">
+        <AppServiceContext.Provider value={defaultValue}>{children}</AppServiceContext.Provider>
+    </MotionConfig>;
 };
 
 export const useAppService = () => {
