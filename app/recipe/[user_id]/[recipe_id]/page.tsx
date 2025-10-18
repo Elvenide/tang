@@ -28,6 +28,11 @@ export default async function Page({ params }: { params: Promise<{ user_id: stri
 
   return (
     <>
+      <Section>Placeholder 1</Section>
+      <Section>Placeholder 2</Section>
+      <Section>Placeholder 3</Section>
+      <Section>Placeholder 4</Section>
+      <Section>Placeholder 5</Section>
       <Section className="bg-amber-950">
         <RecipeContainer recipe={exampleRecipe} />
       </Section>

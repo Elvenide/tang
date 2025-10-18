@@ -37,7 +37,7 @@ export default function RecipeIngredients({ ingredients }: { ingredients: Ingred
   return (
     <>
       <Subheading>Ingredients</Subheading>
-      <motion.ul variants={listVariants} initial="hidden" animate="visible" className="space-y-2 select-none">
+      <motion.ul variants={listVariants} initial="hidden" whileInView="visible" className="space-y-2 select-none">
         {ingredients.map((ingredient, index) => {
           const inputRef = useRef<HTMLInputElement>(null);
           const scheme = colorSchemes[index % colorSchemes.length];

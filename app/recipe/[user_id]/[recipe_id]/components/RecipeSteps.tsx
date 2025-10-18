@@ -22,10 +22,10 @@ export default function RecipeSteps({ steps }: { steps: string[] }) {
   return (
     <div>
       <Subheading>Steps</Subheading>
-      <motion.ol variants={listVariants} initial="hidden" animate="visible">
+      <motion.ol variants={listVariants} initial="hidden" whileInView="visible" className="space-y-2 select-none">
         {steps.map((step, index) => (
           <motion.li key={index} variants={itemVariants}>
-            {step}
+            <span className="text-blue-300 mr-2">{index + 1}.</span><span className="text-white">{step}</span>
           </motion.li>
         ))}
       </motion.ol>
