@@ -20,15 +20,14 @@ export default function RecipeIngredients({ ingredients }: { ingredients: Ingred
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3,
+        staggerChildren: 0.2,
       },
     },
   } satisfies Variants;
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0 },
-    visible: { 
-      opacity: 1, 
+    hidden: { scale: 0 },
+    visible: {
       scale: 1,
       transition: { type: "spring", bounce: 0.5, duration: 0.4 }
     },
@@ -42,7 +41,7 @@ export default function RecipeIngredients({ ingredients }: { ingredients: Ingred
           const inputRef = useRef<HTMLInputElement>(null);
           const scheme = colorSchemes[index % colorSchemes.length];
           return (
-            <motion.li key={index} onClick={() => inputRef.current && (inputRef.current.checked = !inputRef.current.checked)} variants={itemVariants} className="flex items-center bg-gray-900/60 rounded-lg p-1 w-fit cursor-pointer has-checked:border-l-6 has-checked:border-green-600" whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.1 }}>
+            <motion.li key={index} onClick={() => inputRef.current && (inputRef.current.checked = !inputRef.current.checked)} variants={itemVariants} className="flex items-center bg-gray-900/60 rounded-lg p-1 w-fit cursor-pointer opacity-60 has-checked:opacity-100 transition-opacity duration-200" whileTap={{ scale: 0.95 }} whileHover={{ scale: 1.1 }}>
               <div className={`relative rounded text-sm text-white h-4 w-4 ml-1 mr-2 flex items-center justify-center`}>
                 <input ref={inputRef} type="checkbox" className={`w-full h-full pointer-events-none`} />
               </div>

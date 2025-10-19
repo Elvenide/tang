@@ -9,7 +9,7 @@ export default function RecipeSteps({ steps }: { steps: string[] }) {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3,
+        staggerChildren: 0.2,
       },
     },
   } satisfies Variants;
@@ -20,7 +20,7 @@ export default function RecipeSteps({ steps }: { steps: string[] }) {
   } satisfies Variants;
 
   return (
-    <div>
+    <>
       <Subheading>Steps</Subheading>
       <motion.ol variants={listVariants} initial="hidden" whileInView="visible" className="space-y-2 select-none">
         {steps.map((step, index) => (
@@ -29,6 +29,6 @@ export default function RecipeSteps({ steps }: { steps: string[] }) {
           </motion.li>
         ))}
       </motion.ol>
-    </div>
+    </>
   );
 }
