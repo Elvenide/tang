@@ -2,6 +2,7 @@
 import { Recipe } from '@/lib/schema';
 import RecipeContainer from './components/RecipeContainer';
 import type { Metadata } from "next";
+import { AppServiceModifier } from '@/lib/app-service';
 
 const exampleRecipe: Recipe = {
     id: '1',
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ user_id: 
     const { user_id, recipe_id } = await params;
     const user_name = "Elvenide";
     return {
-        title: `${exampleRecipe.title} by ${user_name} | Tang`,
+        title: `${exampleRecipe.title} by ${user_name}`,
         description: `${exampleRecipe.title} recipe added by ${user_name} to the Tang recipe collection.`,
     };
 }
@@ -35,6 +36,8 @@ export async function generateMetadata({ params }: { params: Promise<{ user_id: 
 export default async function Page({ params }: { params: Promise<{ user_id: string; recipe_id: string }> }) {
   const { user_id, recipe_id } = await params;
   return (
-    <RecipeContainer recipe={exampleRecipe} />
+    <AppServiceModifier currentPage="my_recipes">
+      <RecipeContainer recipe={exampleRecipe} />
+    </AppServiceModifier>
   );
 }

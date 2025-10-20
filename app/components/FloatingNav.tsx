@@ -8,7 +8,7 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-import { IconMenu2 } from "@tabler/icons-react";
+import { IconLogin2, IconMenu2, IconUser } from "@tabler/icons-react";
 import {
   AnimatePresence,
   MotionValue,
@@ -16,19 +16,56 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  useScroll,
+  useMotionValueEvent,
 } from "motion/react";
  
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAppService } from "@/lib/app-service";
 
 export default function FloatingNav({
   items
 }: {
-  items: { title: string; icon: React.ReactNode; href: string }[];
+  items: { id: string, title: string; icon: React.ReactNode; href: string }[];
 }) {
+  const service = useAppService();
+  const pages = [...items];
+  if (service.loggedInAs)
+    pages.push({
+      id: "profile",
+      title: service.loggedInAs.username,
+      icon: <IconUser />,
+      href: "/user/" + service.loggedInAs.id,
+    });
+  else
+    pages.push({
+      id: "login",
+      title: "Login",
+      icon: <IconLogin2 />,
+      href: "/login",
+    });
+
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const [open, setOpen] = useState(true);
+  const { scrollYProgress } = useScroll();
+ 
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (latest < 0.95) {
+      setOpen(true);
+    }
+    else {
+      setOpen(false);
+    }
+  });
+
   return (
-    <div className="fixed bottom-4 right-4 lg:right-auto md:left-1/2 md:-translate-x-1/2 w-fit z-30">
-      <FloatingDock items={items} />
-    </div>
+    <motion.div initial={{ y: 100, opacity: 1 }} animate={{ y: open ? 0 : 100, opacity: open ? 1 : 0 }} transition={{ duration: 0.3 }} className="fixed bottom-4 right-4 lg:right-auto md:left-1/2 md:-translate-x-1/2 w-fit z-30 drop-shadow-md drop-shadow-black select-none">
+      {isClient && <FloatingDock items={pages} />}
+    </motion.div>
   );
 }
  
@@ -37,7 +74,7 @@ export const FloatingDock = ({
   desktopClassName,
   mobileClassName,
 }: {
-  items: { title: string; icon: React.ReactNode; href: string }[];
+  items: { id: string, title: string; icon: React.ReactNode; href: string }[];
   desktopClassName?: string;
   mobileClassName?: string;
 }) => {
@@ -53,10 +90,11 @@ const FloatingDockMobile = ({
   items,
   className,
 }: {
-  items: { title: string; icon: React.ReactNode; href: string }[];
+  items: { id: string, title: string; icon: React.ReactNode; href: string }[];
   className?: string;
 }) => {
   const [open, setOpen] = useState(false);
+  const service = useAppService();
   return (
     <div className={cn("relative block md:hidden", className)}>
       <AnimatePresence>
@@ -87,7 +125,7 @@ const FloatingDockMobile = ({
                   key={item.title}
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-900"
                 >
-                  <div className="h-4 w-4 *:h-full *:w-full">{item.icon}</div>
+                  <div className={`h-4 w-4 *:h-full *:w-full ${service.currentPage === item.id ? "text-blue-300" : ""}`}>{item.icon}</div>
                 </a>
               </motion.div>
             ))}
@@ -108,7 +146,7 @@ const FloatingDockDesktop = ({
   items,
   className,
 }: {
-  items: { title: string; icon: React.ReactNode; href: string }[];
+  items: { id: string, title: string; icon: React.ReactNode; href: string }[];
   className?: string;
 }) => {
   let mouseX = useMotionValue(Infinity);
@@ -130,16 +168,19 @@ const FloatingDockDesktop = ({
  
 function IconContainer({
   mouseX,
+  id,
   title,
   icon,
   href,
 }: {
   mouseX: MotionValue;
+  id: string;
   title: string;
   icon: React.ReactNode;
   href: string;
 }) {
   let ref = useRef<HTMLDivElement>(null);
+  const service = useAppService();
  
   let distance = useTransform(mouseX, (val) => {
     let bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
@@ -204,7 +245,7 @@ function IconContainer({
         </AnimatePresence>
         <motion.div
           style={{ width: widthIcon, height: heightIcon }}
-          className="flex items-center justify-center *:h-full *:w-full"
+          className={`flex items-center justify-center *:h-full *:w-full ${service.currentPage === id ? "text-blue-300" : ""}`}
         >
           {icon}
         </motion.div>
