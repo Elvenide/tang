@@ -22,7 +22,7 @@ export default function RecipeSteps({ steps }: { steps: string[] }) {
   return (
     <>
       <Subheading>Steps</Subheading>
-      <motion.ol variants={listVariants} initial="hidden" whileInView="visible" className="space-y-2 select-none">
+      <motion.ol variants={listVariants} initial="hidden" whileInView="visible" className="space-y-2">
         {steps.map((step, index) => (
           <motion.li key={index} variants={itemVariants}>
             <span className="text-blue-300 mr-2">{index + 1}.</span><span className="text-white">{step}</span>
