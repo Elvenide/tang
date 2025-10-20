@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AppServiceProvider } from "./lib/app-service";
 import "./globals.css";
+import FloatingNav from "@/components/FloatingNav";
+import { IconHome, IconInfoCircle, IconMail } from "@tabler/icons-react";
+
+const items = [
+  { title: "Home", icon: <IconHome />, href: "/" },
+  { title: "About", icon: <IconInfoCircle />, href: "/about" },
+  { title: "Contact", icon: <IconMail />, href: "/contact" },
+];
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +37,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <AppServiceProvider>{children}</AppServiceProvider>
+        <FloatingNav items={items} />
       </body>
     </html>
   );
